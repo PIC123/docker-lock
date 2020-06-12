@@ -23,20 +23,20 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/docker/cli/cli-plugins/manager"
 	"github.com/michaelperel/docker-lock/cmd"
 )
 
 func main() {
-	if os.Args[1] == "docker-cli-plugin-metadata" {
-		m := map[string]string{
-			"SchemaVersion":    "0.1.0",
-			"Vendor":           "https://github.com/michaelperel/docker-lock",
-			"Version":          cmd.Version,
-			"ShortDescription": "Manage Lockfiles",
+	if len(os.Args) > 1 && os.Args[1] == manager.MetadataSubcommandName {
+		m := manager.Metadata{
+			SchemaVersion:    "0.1.0",
+			Vendor:           "https://github.com/michaelperel/docker-lock",
+			Version:          cmd.Version,
+			ShortDescription: "Manage Lockfiles",
 		}
-		j, _ := json.Marshal(m)
-
-		fmt.Println(string(j))
+		enc := json.NewEncoder(os.Stdout)
+		enc.Encode(m)
 
 		os.Exit(0)
 	}
